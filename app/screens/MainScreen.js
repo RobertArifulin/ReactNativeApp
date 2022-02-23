@@ -1,23 +1,23 @@
 import React from 'react';
 import {View, StyleSheet, Platform, StatusBar, Text, Animation, Dimensions} from 'react-native';
 import Swiper from '../modules/Swiper';
+import AnimTest from '../modules/AnimationTest'
 
 const {screenWidth, screenHeight} = Dimensions.get("screen");
 
 function MainScreen(props) {
     return (
-        <View style={styles.background}>
-            <View style={styles.upperBar}>
-                <Swiper/>
-            </View>
-            <View style={styles.lowerBar}>
-                <Text style={styles.text}>
-                    <Text style={styles.headingText}>Проект: Tinder для проектов{"\n"}</Text>
-                    <Text style={styles.innerText}>Заказчик: Гусев Антон{"\n"}</Text>
-                    <Text style={styles.innerText}>Исполнитель: Арифулин Роберт</Text>
-                </Text>
-            </View>
-        </View>
+        <Swiper/>
+        // <View style={styles.background}>
+        //     <Swiper/>
+        //     <View style={styles.lowerBar}>
+        //         <Text style={styles.text}>
+        //             <Text style={styles.headingText}>Проект: Tinder для проектов{"\n"}</Text>
+        //             <Text style={styles.innerText}>Заказчик: Гусев Антон{"\n"}</Text>
+        //             <Text style={styles.innerText}>Исполнитель: Арифулин Роберт</Text>
+        //         </Text>
+        //     </View>
+        // </View>
     );
 }
 
@@ -36,10 +36,10 @@ const styles = StyleSheet.create({
     },
     headingText: {
         fontWeight: "bold",
-        fontSize: 32,
+        fontSize: 20,
     },
     innerText: {
-        fontSize: 24,
+        fontSize: 16,
     },
     lowerBar: {
         width: "100%",
@@ -48,8 +48,10 @@ const styles = StyleSheet.create({
     },
     upperBar: {
         width: "100%",
-        backgroundColor: "gold",
-        flex: 2
+        backgroundColor: "red",
+        flex: 5,
+        alignItems: 'center',
+        justifyContent: 'center'
     }
 })
 
