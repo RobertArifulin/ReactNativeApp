@@ -6,18 +6,18 @@ import AnimTest from '../modules/AnimationTest'
 const {screenWidth, screenHeight} = Dimensions.get("screen");
 
 function MainScreen(props) {
+    let swiperHeight = 0;
     return (
+        <>
         <Swiper/>
-        // <View style={styles.background}>
-        //     <Swiper/>
-        //     <View style={styles.lowerBar}>
-        //         <Text style={styles.text}>
-        //             <Text style={styles.headingText}>Проект: Tinder для проектов{"\n"}</Text>
-        //             <Text style={styles.innerText}>Заказчик: Гусев Антон{"\n"}</Text>
-        //             <Text style={styles.innerText}>Исполнитель: Арифулин Роберт</Text>
-        //         </Text>
-        //     </View>
-        // </View>
+        <View style={styles.lowerBar}>
+            <Text style={styles.text}>
+                <Text style={styles.headingText}>Проект: Tinder для проектов{"\n"}</Text>
+                <Text style={styles.innerText}>Заказчик: Гусев Антон{"\n"}</Text>
+                <Text style={styles.innerText}>Исполнитель: Арифулин Роберт</Text>
+            </Text>
+        </View> 
+        </>
     );
 }
 
@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
     },
     upperBar: {
         width: "100%",
-        backgroundColor: "red",
+        backgroundColor: "#fff",
         flex: 5,
         alignItems: 'center',
         justifyContent: 'center'

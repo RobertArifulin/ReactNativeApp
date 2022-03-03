@@ -6,15 +6,14 @@ import {
     Button,
     ScrollView,
     Text,
+    StatusBar,
     StyleSheet,
     Dimensions,
     PanResponder,
 } from "react-native";
-import { transform } from "react-native/Libraries/Components/View/ReactNativeStyleAttributes";
-import { Component } from "react/cjs/react.production.min";
-
-const SCREEN_HEIGHT = Dimensions.get("window").height;
-const SCREEN_WIDTH = Dimensions.get("window").width;
+let widgetWidth = 0;
+let SCREEN_HEIGHT = Dimensions.get("window").height;
+let SCREEN_WIDTH = Dimensions.get("window").width;
 
 const Images = [
     { id: "1", uri: require("../assets/1.jpg") },
@@ -25,7 +24,8 @@ const Images = [
 ];
 
 function Swiper(props) {
-    const position = new Animated.ValueXY();
+    const defaultY = 0
+    const position = new Animated.ValueXY({x : 0, y : defaultY});
     const [state, setState] = useState({ currentIndex: 0 });
     const rotate = position.x.interpolate({
         inputRange: [-SCREEN_WIDTH / 2, 0, SCREEN_WIDTH / 2],
@@ -65,29 +65,31 @@ function Swiper(props) {
     const panResponder = PanResponder.create({
         onStartShouldSetPanResponder: (evt, getusreState) => true,
         onPanResponderMove: (evt, getusreState) => {
-            position.setValue({ x: getusreState.dx, y: getusreState.dy });
+            position.setValue({ x: getusreState.dx, y: defaultY + getusreState.dy });
         },
         onPanResponderRelease: (evt, getusreState) => {
-            if (getusreState.dx>120){
-                Animated.spring(position, {
-                    toValue:{x:SCREEN_WIDTH + 100, y:getusreState.dy},
+            if (getusreState.dx>SCREEN_WIDTH / 3){
+                Animated.timing(position, {
+                    toValue:{x:SCREEN_WIDTH + 100, y: defaultY + getusreState.dy},
+                    duration: 300,
                     useNativeDriver: true,
                 }).start(() => {
                     setState(state.currentIndex + 1 <= 4 ? {currentIndex: state.currentIndex + 1} : {currentIndex: 0});
-                    position.setValue({ x: 0, y: 0 });
+                    position.setValue({ x: 0, y: defaultY });
                 })
-            } else if (getusreState.dx<-120){
-                Animated.spring(position, {
-                    toValue:{x:-SCREEN_WIDTH - 100, y:getusreState.dy},
+            } else if (getusreState.dx<-SCREEN_WIDTH / 3){
+                Animated.timing(position, {
+                    toValue:{x:-SCREEN_WIDTH - 100, y:defaultY + getusreState.dy},
+                    duration: 300,
                     useNativeDriver: true,
                 }).start(() => {
-                    setState(state.currentIndex + 1 <= 4 ? {currentIndex: state.currentIndex + 1} : {currentIndex: 0});
-                    position.setValue({ x: 0, y: 0 });
+                    setState(state.currentIndex + 1 <= 4 ? {currentIndex: state.currentIndex + 1} : {currentIndex: 1});
+                    position.setValue({ x: 0, y: defaultY });
                 })
             } else {
                 Animated.spring(position, {
-                    toValue:{x:0, y:0},
-                    friction: 4,
+                    toValue:{x:0, y: defaultY},
+                    friction: 5,
                     useNativeDriver: true
                 }).start()
             }
@@ -103,14 +105,8 @@ function Swiper(props) {
                     <Animated.View
                         {...panResponder.panHandlers}
                         key={item.id}
-                        style={[rotateAndTranslate, styles.imageAnimation]}
+                        style={[rotateAndTranslate, styles.topImageAnimation]}
                     >
-                        <Animated.View style={[styles.likeAnimation, {opacity: likeOpacity}]}>
-                            <Text style={styles.likeText}>LIKE</Text>
-                        </Animated.View>
-                        <Animated.View style={[styles.dislikeAnimation, {opacity: dislikeOpacity}]}>
-                            <Text style={styles.dislikeText}>NOPE</Text>
-                        </Animated.View>
                         <Image
                             style={styles.image}
                             source={item.uri}
@@ -119,7 +115,9 @@ function Swiper(props) {
                 );
             } else {
                 return (
-                    <Animated.View key={item.id} style={[{opacity:nextCardOpacity, transform:[{scale:nextCardScale}]}, styles.imageAnimation]}>
+
+                    <Animated.View key={item.id} 
+                                   style={[{opacity:nextCardOpacity, transform:[{scale:nextCardScale}]}, styles.lowerImageAnimation]}>
                         <Image
                             style={styles.image}
                             source={item.uri}
@@ -129,29 +127,37 @@ function Swiper(props) {
             }
         }).reverse();
     };
-
     return (
-        <View style={{ flex: 1 }}>
-            <View style={styles.header}></View>
-            <View style={styles.content}>{renderImage()}</View>
-            <View style={styles.header}></View>
+        <View style={{ flex: 5 }}>
+            <View style={styles.header}/>
+            <View style={styles.content} onLayout={(event) => {SCREEN_HEIGHT = event.nativeEvent.layout.h}} >
+                {renderImage()}
+            </View>
+            {/* <View style={styles.footer}/> */}
         </View>
     );
-}
 
+}
 const styles = StyleSheet.create({
     header: {
-        height: 60,
+        height: StatusBar.currentHeight,
+        backgroundColor: "#fff",
     },
-    footter: {
-        height: 60,
+    footer: {
+        height: 20,
+        backgroundColor: "#fff",
     },
     content: {
         flex: 1,
         backgroundColor: "#fff",
     },
-    imageAnimation: {
-        height: SCREEN_HEIGHT - 120,
+    topImageAnimation: {
+        height: SCREEN_HEIGHT / 6 * 5 - 40,
+        width: SCREEN_WIDTH,
+        padding: 10,
+    },
+    lowerImageAnimation: {
+        height: SCREEN_HEIGHT / 6 * 5 - 40,
         width: SCREEN_WIDTH,
         padding: 10,
         position: "absolute",
@@ -186,14 +192,16 @@ const styles = StyleSheet.create({
         position: "absolute",
         top: 50,
         left: 40,
-        zIndex: 1000
+        width: 110,
+        elevation: 1000
     },
     dislikeAnimation: {
         transform:[{rotate: "10deg"}],
         position: "absolute",
+        width: 110,
         top: 50,
-        right: 40,
-        zIndex: 1000
+        left: 300,
+        elevation: 1000
     }
 });
 
