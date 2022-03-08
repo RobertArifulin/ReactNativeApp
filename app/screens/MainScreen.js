@@ -2,6 +2,7 @@ import React from 'react';
 import {View, StyleSheet, Platform, StatusBar, Text, Animation, Dimensions} from 'react-native';
 import Swiper from '../modules/Swiper';
 import AnimTest from '../modules/AnimationTest'
+import Kard from '../modules/Kard';
 
 const {screenWidth, screenHeight} = Dimensions.get("screen");
 
@@ -9,7 +10,9 @@ function MainScreen(props) {
     let swiperHeight = 0;
     return (
         <>
-        <Swiper/>
+        <View style={{flex: 5}}>
+            <Swiper/>
+        </View>
         <View style={styles.lowerBar}>
             <Text style={styles.text}>
                 <Text style={styles.headingText}>Проект: Tinder для проектов{"\n"}</Text>

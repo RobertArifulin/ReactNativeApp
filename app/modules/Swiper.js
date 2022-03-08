@@ -11,10 +11,19 @@ import {
     Dimensions,
     PanResponder,
 } from "react-native";
+import Kard from './Kard' 
+
 let widgetWidth = 0;
 let SCREEN_HEIGHT = Dimensions.get("window").height;
 let SCREEN_WIDTH = Dimensions.get("window").width;
 
+const Items = [
+    {id : "1" , uri: <Kard name="Name One" customer="Winston Churchill"/>},
+    {id : "2" , uri: <Kard name="Name Two" customer="Winston Churchill"/>},
+    {id : "3" , uri: <Kard name="Name Three" customer="Winston Churchill"/>},
+    {id : "4" , uri: <Kard name="Name Four" customer="Winston Churchill"/>},
+    {id : "5" , uri: <Kard name="Name Five" customer="Winston Churchill"/>},
+];
 const Images = [
     { id: "1", uri: require("../assets/1.jpg") },
     { id: "2", uri: require("../assets/2.jpg") },
@@ -83,7 +92,7 @@ function Swiper(props) {
                     duration: 300,
                     useNativeDriver: true,
                 }).start(() => {
-                    setState(state.currentIndex + 1 <= 4 ? {currentIndex: state.currentIndex + 1} : {currentIndex: 1});
+                    setState(state.currentIndex + 1 <= 4 ? {currentIndex: state.currentIndex + 1} : {currentIndex: 0});
                     position.setValue({ x: 0, y: defaultY });
                 })
             } else {
@@ -97,7 +106,7 @@ function Swiper(props) {
     });
 
     const renderImage = () => {
-        return Images.map((item, i) => {
+        return Items.map((item, i) => {
             if (i < state.currentIndex) {
                 return null;
             } else if (i == state.currentIndex) {
@@ -107,10 +116,11 @@ function Swiper(props) {
                         key={item.id}
                         style={[rotateAndTranslate, styles.topImageAnimation]}
                     >
-                        <Image
+                        {/* <Image
                             style={styles.image}
                             source={item.uri}
-                        />
+                        /> */}
+                        {item.uri}
                     </Animated.View>
                 );
             } else {
@@ -118,10 +128,11 @@ function Swiper(props) {
 
                     <Animated.View key={item.id} 
                                    style={[{opacity:nextCardOpacity, transform:[{scale:nextCardScale}]}, styles.lowerImageAnimation]}>
-                        <Image
+                        {/* <Image
                             style={styles.image}
                             source={item.uri}
-                        />
+                        /> */}
+                        {item.uri}
                     </Animated.View>
                 );
             }
