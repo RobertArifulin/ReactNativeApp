@@ -15,6 +15,8 @@ import {
     Modal,
 } from "react-native";
 
+const { Client } = require("@notionhq/client");
+
 let SCREEN_HEIGHT = Dimensions.get("window").height;
 let SCREEN_WIDTH = Dimensions.get("window").width;
 const text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum";
@@ -66,7 +68,7 @@ function Kard(props) {
                         </Text>
                     </View>
                     <View style={styles.innerFootter}>
-                        <Pressable onPress={() => setModalVisible(true)}>
+                        <Pressable onPress={() => setModalVisible(true)} style={styles.popupButton}>
                             <Text style={styles.fotterText}>...</Text>
                         </Pressable>
                     </View>
@@ -128,7 +130,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#E0E0E0",
         borderBottomLeftRadius: 20,
         borderBottomRightRadius: 20,
-        alignItems: "center",
+        // alignItems: "center",
         justifyContent: "center",
     },
     fotterText: {
@@ -153,6 +155,12 @@ const styles = StyleSheet.create({
         backgroundColor: "#E5E5E5",
         padding: 10,
     },
+    popupButton: {
+        flex: 1,
+        borderRadius: 20,
+        backgroundColor: "#E0E0E0",
+        padding: 10,
+    },
     buttonText: {
         fontFamily: "Roboto",
         textAlign: "center",
@@ -161,7 +169,7 @@ const styles = StyleSheet.create({
     },
     centeredView: {
         flex: 1,
-        backgroundColor: "#E5E5E5",
+        backgroundColor: "#E0E0E0",
         justifyContent: "center",
         alignItems: "center",
     },
