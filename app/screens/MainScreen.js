@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {View, StyleSheet, Platform, StatusBar, Text, Animation, Dimensions, Linking} from 'react-native';
 import Swiper from '../modules/Swiper';
 import AnimTest from '../modules/AnimationTest'
@@ -7,9 +7,36 @@ import Kard from '../modules/Kard';
 const {screenWidth, screenHeight} = Dimensions.get("screen");
 
 function MainScreen(props) {
-    let swiperHeight = 0;
+    const useMount = func => useEffect(() => func(), []);
+    const useInitialURL = () => {
+        const [url, setUrl] = useState(null);
+        const [processing, setProcessing] = useState(true);
+    
+        useMount(() => {
+        const getUrlAsync = async () => {
+            // Get the deep link used to open the app
+            const initialUrl = await Linking.getInitialURL();
+            console.log(initialUrl);
+            // The setTimeout is just for testing purpose
+            setTimeout(() => {
+            setUrl(initialUrl);
+            setProcessing(false);
+            }, 1000);
+        };
+    
+        getUrlAsync();
+        });
+    
+        return { url, processing };
+    };
+
+    const { url: initialUrl, processing } = useInitialURL();
+    // const initialUrl = "https://api.notion.com/v1/oauth/authorize?owner=user&client_id=728d9ca7-3680-4bfd-a63f-adacfa7ca050&redirect_uri=https%3A%2F%2Fexample.com%2Fauth%2Fnotion%2Fcallback&response_type=code";
+    const URL = 'https://api.notion.com/v1/oauth/authorize?owner=user&client_id=728d9ca7-3680-4bfd-a63f-adacfa7ca050' + initialUrl + '&response_type=code';
+    // console.log(URL);
+    // https://www.notion.so/oauth2callback?state=eyJjYWxsYmFja1R5cGUiOiJyZWRpcmVjdCIsImVuY3J5cHRlZFRva2VuIjoiZjA4OGQ2YzFkMDg3ZDU5NmUwMGFkOWM2YjU2NTQyNzAyMDgwZDdjOWE0NWI0MmMwYjE3NDdhYWVjMTQ0MWI2NjhjOTgzNTA0YzQ5NjVlOTg1MWNkYWYzYTQwYTI5ZGI1YzgzN2NmZWQ5YjAwNGI2NjcwZDkwMTI2ODFiOTBmZjgyODNmNTI1NWE4MzgwMDMzZDgyYjRhMzU2ZjU4In0%3D&code=4%2F0AX4XfWienu9jDH9RSWJzZtCiAe-wKtkvwiNl5sIiNvUDBabUgvF5PA0FpN42xkHAFp09QA&scope=email%20profile%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile%20openid&authuser=0&prompt=none
     function hyperLink(){
-        Linking.openURL('https://api.notion.com/v1/oauth/authorize?owner=user&client_id=463558a3-725e-4f37-b6d3-0889894f68de&redirect_uri=https%3A%2F%2Fexample.com%2Fauth%2Fnotion%2Fcallback&response_type=code');
+        Linking.openURL(URL);
     }
 
     return (
