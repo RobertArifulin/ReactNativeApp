@@ -1,30 +1,8 @@
-import { Client } from "@notionhq/client"
+import { registerRootComponent } from 'expo';
 
-const notion = new Client({ auth: process.env.NOTION_KEY })
+import App from './App';
 
-const databaseId = process.env.NOTION_DATABASE_ID
-
-async function addItem(text) {
-  try {
-    const response = await notion.pages.create({
-      parent: { database_id: databaseId },
-      properties: {
-        title: { 
-          title:[
-            {
-              "text": {
-                "content": text
-              }
-            }
-          ]
-        }
-      },
-    })
-    console.log(response)
-    console.log("Success! Entry added.")
-  } catch (error) {
-    console.error(error.body)
-  }
-}
-
-addItem("Yurts in Big Sur, California")
+// registerRootComponent calls AppRegistry.registerComponent('main', () => App);
+// It also ensures that whether you load the app in Expo Go or in a native build,
+// the environment is set up appropriately
+registerRootComponent(App);

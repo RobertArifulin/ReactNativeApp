@@ -1,0 +1,29 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+
+    <application android:usesCleartextTraffic="true" tools:targetApi="28" tools:ignore="GoogleAppIndexingWarning" />
+    <activity
+        android:name="android.permission.SYSTEM_ALERT_WINDOW"
+        android:label="@string/title_gizmos" >
+        <intent-filter android:label="@string/filter_view_http_gizmos">
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.DEFAULT" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <!-- Accepts URIs that begin with "http://www.example.com/gizmos” -->
+            <data android:scheme="http"
+                android:host="www.exp.com"
+                android:pathPrefix="/192.168.154.186:1900" />
+            <!-- note that the leading "/" is required for pathPrefix-->
+        </intent-filter>
+        <intent-filter android:label="@string/filter_view_example_gizmos">
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.DEFAULT" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <!-- Accepts URIs that begin with "example://gizmos” -->
+            <data android:scheme="exp"
+                android:host="192.168.154.186:19000" />
+        </intent-filter>
+    </activity>
+</manifest>
