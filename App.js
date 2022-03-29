@@ -9,7 +9,7 @@ import MainScreen from "./app/screens/MainScreen";
 // import {NOTION_KEY, NOTION_DATABASE_ID} from "@env"
 
 
-// const { Client } = require("@notionhq/client")
+const { Client } = require("@notionhq/client")
 
 // const notion = new Client({ auth: NOTION_KEY });
 
