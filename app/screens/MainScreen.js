@@ -6,10 +6,6 @@ import Kard from '../modules/Kard';
 
 const {screenWidth, screenHeight} = Dimensions.get("screen");
 
-Linking.addEventListener('url', script => {
-    console.log(script);
-})
-
 function MainScreen(props) {
     const useMount = func => useEffect(() => func(), []);
     const useInitialURL = () => {
@@ -33,13 +29,9 @@ function MainScreen(props) {
     
         return { url, processing };
     };
-// https://example.com/auth/notion/callback?code=bd7c16b0-68fb-4eff-a112-3362ae87b1dc&state=
-// https://api.notion.com/v1/oauth/authorize?owner=user&client_id=728d9ca7-3680-4bfd-a63f-adacfa7ca050&redirect_uri=https://example.com/auth/notion/callback&response_type=code
-// https://www.notion.so/install-integration?response_type=code&client_id=728d9ca7-3680-4bfd-a63f-adacfa7ca050&redirect_uri=https%3A%2F%2Fexample.com%2Fauth%2Fnotion%2Fcallback&owner=user
-// https://example.com/auth/notion/callback?code=4b4303e5-a927-40a8-a651-7e6614f899e8&state=
-// const { url: initialUrl, processing } = useInitialURL();
-    // const redirect_uri = "htts%3A%2F%2www.exp.com%2192.168.154.186:19000";
-    const redirect_uri = "https://example.com/auth/notion/callback";
+    const redirect_uri = "https://pe4enowa.notion.site/";
+    // https://pe4enowa.notion.site/?code=e3ae9d0d-e0f7-41f0-bb74-1bfb44711540&state=
+    // const redirect_uri = "https://example.com/auth/notion/callback";
     // const initialUrl = "https://api.notion.com/v1/oauth/authorize?owner=user&client_id=728d9ca7-3680-4bfd-a63f-adacfa7ca050&redirect_uri=https%3A%2F%2Fexample.com%2Fauth%2Fnotion%2Fcallback&response_type=code";
     const URL = 'https://api.notion.com/v1/oauth/authorize?owner=user&client_id=728d9ca7-3680-4bfd-a63f-adacfa7ca050&redirect_uri=' + redirect_uri + '&response_type=code';
     // console.log(URL);
