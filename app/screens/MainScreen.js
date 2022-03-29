@@ -13,10 +13,7 @@ const useInitialURL = () => {
 
     useMount(() => {
     const getUrlAsync = async () => {
-        // Get the deep link used to open the app
         const initialUrl = await Linking.getInitialURL();
-        console.log(initialUrl);
-        // The setTimeout is just for testing purpose
         setTimeout(() => {
         setUrl(initialUrl);
         setProcessing(false);
@@ -29,9 +26,29 @@ const useInitialURL = () => {
     return { url, processing };
 };
 
+let initialUrl = "123";
+let code = "123";
+
+Linking.addEventListener('url', function(url) {
+    console.log(3);
+    console.log(url.url);
+    initialUrl = url.url;
+    code = initialUrl.slice(initialUrl.lastIndexOf("/") + 1);
+    console.log(code);
+});
+
+
 function MainScreen(props) {
-    const { url: initialUrl, processing } = useInitialURL();
-    console.log(1);
+    const { a: url, processing } = useInitialURL();
+    try {
+        initialUrl = url;
+        code = initialUrl.slice(initialUrl.lastIndexOf("/") + 1);
+    } catch {
+
+    } finally {
+
+    }
+    
     console.log(initialUrl);
 
     const redirect_uri = "https://robertarifulin.github.io/ReactNativeApp/";
