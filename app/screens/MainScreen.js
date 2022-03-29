@@ -29,12 +29,10 @@ function MainScreen(props) {
     
         return { url, processing };
     };
-    const redirect_uri = "https://pe4enowa.notion.site/";
-    // https://pe4enowa.notion.site/?code=e3ae9d0d-e0f7-41f0-bb74-1bfb44711540&state=
-    // const redirect_uri = "https://example.com/auth/notion/callback";
-    // const initialUrl = "https://api.notion.com/v1/oauth/authorize?owner=user&client_id=728d9ca7-3680-4bfd-a63f-adacfa7ca050&redirect_uri=https%3A%2F%2Fexample.com%2Fauth%2Fnotion%2Fcallback&response_type=code";
+    const redirect_uri = "https://robertarifulin.github.io/ReactNativeApp/";
+   
     const URL = 'https://api.notion.com/v1/oauth/authorize?owner=user&client_id=728d9ca7-3680-4bfd-a63f-adacfa7ca050&redirect_uri=' + redirect_uri + '&response_type=code';
-    // console.log(URL);
+    // https://api.notion.com/v1/oauth/authorize?owner=user&client_id=728d9ca7-3680-4bfd-a63f-adacfa7ca050&redirect_uri=https://robertarifulin.github.io/ReactNativeApp/&response_type=code
     // https://www.notion.so/oauth2callback?state=eyJjYWxsYmFja1R5cGUiOiJyZWRpcmVjdCIsImVuY3J5cHRlZFRva2VuIjoiZjA4OGQ2YzFkMDg3ZDU5NmUwMGFkOWM2YjU2NTQyNzAyMDgwZDdjOWE0NWI0MmMwYjE3NDdhYWVjMTQ0MWI2NjhjOTgzNTA0YzQ5NjVlOTg1MWNkYWYzYTQwYTI5ZGI1YzgzN2NmZWQ5YjAwNGI2NjcwZDkwMTI2ODFiOTBmZjgyODNmNTI1NWE4MzgwMDMzZDgyYjRhMzU2ZjU4In0%3D&code=4%2F0AX4XfWienu9jDH9RSWJzZtCiAe-wKtkvwiNl5sIiNvUDBabUgvF5PA0FpN42xkHAFp09QA&scope=email%20profile%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile%20openid&authuser=0&prompt=none
     function hyperLink(){
         Linking.openURL(URL);
