@@ -1,8 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import {View, StyleSheet, Platform, StatusBar, Text, Animation, Dimensions, Linking} from 'react-native';
 import Swiper from '../modules/Swiper';
-import AnimTest from '../modules/AnimationTest'
+import base64 from 'react-native-base64';
+import AnimTest from '../modules/AnimationTest';
 import Kard from '../modules/Kard';
+import {CLIENT_ID, CLIENT_SECRET} from "@env";
+
+const client_id = CLIENT_ID;
+const client_secret = CLIENT_SECRET;
+const redirect_uri = "https://robertarifulin.github.io/ReactNativeApp/";
+let initialUrl = "";
+let usedCode = [];
+let code = "";
+//https://robertarifulin.github.io/ReactNativeApp/?code=6ffece2b-9379-480e-9b1c-3b1481b270fb&state=
+
+const authorization = "Basic " + base64.encode(client_id + ":" + client_secret) + "=";
 
 const {screenWidth, screenHeight} = Dimensions.get("screen");
 
@@ -26,35 +38,62 @@ const useInitialURL = () => {
     return { url, processing };
 };
 
-let initialUrl = "123";
-let code = "123";
-
-Linking.addEventListener('url', function(url) {
-    console.log(3);
-    console.log(url.url);
-    initialUrl = url.url;
-    code = initialUrl.slice(initialUrl.lastIndexOf("/") + 1);
-    console.log(code);
-});
-
 
 function MainScreen(props) {
+    const [isLoading, setLoading] = useState(true);
+    const [data, setData] = useState([]);
+
+    const getToken = async () => {
+        try {
+        if (!usedCode.includes(code)) {
+         const response = await fetch('https://api.notion.com/v1/oauth/token', {
+            method: 'POST',
+            headers: {
+              Authorization: authorization,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                grant_type: "authorization_code",
+                code: code,
+                redirect_uri: redirect_uri
+            })
+          });
+         const json = await response.json();
+         if (!json.error) {
+            setData(json);
+            usedCode.push(code);
+         }
+         console.log(json);
+        }
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
+     }
+
+     
+    Linking.addEventListener('url', function(url) {
+        if ((url.url.match(new RegExp("/", "g")) || []).length > 2 || url.url[0] == 'r') {
+            initialUrl = url.url;
+            code = initialUrl.slice(initialUrl.lastIndexOf("/") + 1);
+            console.log(code);
+            getToken();
+        }
+    });
+
     const { a: url, processing } = useInitialURL();
     try {
-        initialUrl = url;
-        code = initialUrl.slice(initialUrl.lastIndexOf("/") + 1);
+        if ((url.match(new RegExp("/", "g")) || []).length > 2 || url[0] == 'r') {
+            initialUrl = url;
+            code = initialUrl.slice(initialUrl.lastIndexOf("/") + 1);
+        }
     } catch {
-
     } finally {
-
     }
     
-    console.log(initialUrl);
-
-    const redirect_uri = "https://robertarifulin.github.io/ReactNativeApp/";
    
     const URL = 'https://api.notion.com/v1/oauth/authorize?owner=user&client_id=728d9ca7-3680-4bfd-a63f-adacfa7ca050&redirect_uri=' + redirect_uri + '&response_type=code';
-    // https://robertarifulin.github.io/ReactNativeApp/?code=0bdfda5c-bd27-4991-9a02-e9e1343596d7&state=
     function hyperLink(){
         Linking.openURL(URL);
     }
@@ -69,7 +108,8 @@ function MainScreen(props) {
                 <Text style={styles.headingText}>Проект: Tinder для проектов{"\n"}</Text>
                 <Text style={styles.innerText}>Заказчик: Гусев Антон{"\n"}</Text>
                 <Text style={styles.innerText} >Исполнитель: Арифулин Роберт{"\n"}</Text>
-                <Text style={styles.innerText} onPress={hyperLink}>Ссылка на авторизацию</Text>
+                <Text style={[styles.innerText, {color:"blue"}]} onPress={hyperLink}>Ссылка на авторизацию{"\n"}</Text>
+                <Text style={styles.innerText}>Токен: {data.access_token}</Text>
             </Text>
         </View> 
         </>
