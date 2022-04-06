@@ -6,13 +6,16 @@ import AnimTest from '../modules/AnimationTest';
 import Kard from '../modules/Kard';
 import {CLIENT_ID, CLIENT_SECRET} from "@env";
 
+const { Client } = require("@notionhq/client");
+
+let notion = new Client();
+
 const client_id = CLIENT_ID;
 const client_secret = CLIENT_SECRET;
 const redirect_uri = "https://robertarifulin.github.io/ReactNativeApp/";
 let initialUrl = "";
 let usedCode = [];
 let code = "";
-//https://robertarifulin.github.io/ReactNativeApp/?code=6ffece2b-9379-480e-9b1c-3b1481b270fb&state=
 
 const authorization = "Basic " + base64.encode(client_id + ":" + client_secret) + "=";
 
@@ -61,7 +64,14 @@ function MainScreen(props) {
          const json = await response.json();
          if (!json.error) {
             setData(json);
+            notion = new Client({
+                auth: data.access_token,
+              });
             usedCode.push(code);
+            ;(async () => {
+                const listUsersResponse = await notion.users.list({})
+            })();
+            console.log(listUsersResponse);
          }
          console.log(json);
         }

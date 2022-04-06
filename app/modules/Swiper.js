@@ -41,6 +41,16 @@ function Swiper(props) {
         outputRange: ["-10deg", "0deg", "10deg"],
         extrapolate: "clamp",
     });
+    const likeRotate = position.x.interpolate({
+        inputRange: [-SCREEN_WIDTH / 2, 0, SCREEN_WIDTH / 2],
+        outputRange: ["10deg", "0deg", "-10deg"],
+        extrapolate: "clamp",
+    });
+    const dislikeRotate = position.x.interpolate({
+        inputRange: [-SCREEN_WIDTH / 2, 0, SCREEN_WIDTH / 2],
+        outputRange: ["10deg", "0deg", "-10deg"],
+        extrapolate: "clamp",
+    });
     const rotateAndTranslate = {
         transform: [
             {
@@ -49,13 +59,29 @@ function Swiper(props) {
             ...position.getTranslateTransform(),
         ],
     };
+    const rotateAndTranslateLike = {
+        transform: [
+            {
+                rotate: likeRotate,
+            },
+            // ...position.getTranslateTransform(),
+        ],
+    };
+    const rotateAndTranslateDislike = {
+        transform: [
+            {
+                rotate: dislikeRotate,
+            },
+            // ...position.getTranslateTransform(),
+        ],
+    };
     const likeOpacity = position.x.interpolate({
-        inputRange: [-SCREEN_WIDTH / 2, 0, SCREEN_WIDTH / 2],
+        inputRange: [-SCREEN_WIDTH / 3, 0, SCREEN_WIDTH / 3],
         outputRange: [0, 0, 1],
         extrapolate: "clamp",  
     });
     const dislikeOpacity = position.x.interpolate({
-        inputRange: [-SCREEN_WIDTH / 2, 0, SCREEN_WIDTH / 2],
+        inputRange: [-SCREEN_WIDTH / 3, 0, SCREEN_WIDTH / 3],
         outputRange: [1, 0, 0],
         extrapolate: "clamp",  
     });
@@ -115,12 +141,15 @@ function Swiper(props) {
                         {...panResponder.panHandlers}
                         key={item.id}
                         style={[rotateAndTranslate, styles.topImageAnimation]}
-                    >
-                        {/* <Image
-                            style={styles.image}
-                            source={item.uri}
-                        /> */}
+                    >   
+                    <Animated.View style={[rotateAndTranslateLike, styles.likeAnimation, {opacity: likeOpacity}]}>
+                        <Text style={styles.likeText}>LIKE</Text>
+                    </Animated.View>
+                    <Animated.View style={[styles.dislikeAnimation, rotateAndTranslateDislike, {opacity: dislikeOpacity}]}>
+                        <Text style={styles.dislikeText}>NOPE</Text>
+                    </Animated.View>
                         {item.uri}
+
                     </Animated.View>
                 );
             } else {
@@ -161,11 +190,16 @@ const styles = StyleSheet.create({
     content: {
         flex: 1,
         backgroundColor: "#fff",
+        alignItems: 'center',
+        justifyContent: 'center'
     },
     topImageAnimation: {
         height: SCREEN_HEIGHT / 6 * 5 - 40,
         width: SCREEN_WIDTH,
         padding: 10,
+        alignItems: 'center',
+        justifyContent: 'center'
+        
     },
     lowerImageAnimation: {
         height: SCREEN_HEIGHT / 6 * 5 - 40,
@@ -181,38 +215,26 @@ const styles = StyleSheet.create({
         borderRadius: 20,
     },
     likeText: {
-        borderWidth: 1,
-        backgroundColor: "#fff",
-        borderColor: 'green',
+        backgroundColor: "#E0E0E0",
         color: "green",
-        fontSize: 32,
+        fontSize: 64,
         fontWeight: 'bold',
         padding: 10
     },
     dislikeText: {
-        borderWidth: 1,
-        backgroundColor: "#fff",
-        borderColor: 'red',
+        backgroundColor: "#E0E0E0",
         color: "red",
-        fontSize: 32,
+        fontSize: 64,
         fontWeight: 'bold',
         padding: 10
     },
     likeAnimation: {
-        transform:[{rotate: "-10deg"}],
         position: "absolute",
-        top: 50,
-        left: 40,
-        width: 110,
-        elevation: 1000
+        zIndex: 2,
     },
     dislikeAnimation: {
-        transform:[{rotate: "10deg"}],
         position: "absolute",
-        width: 110,
-        top: 50,
-        left: 300,
-        elevation: 1000
+        zIndex: 2,
     }
 });
 

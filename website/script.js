@@ -6,6 +6,6 @@ function main() {
     value = params.code; // 
     console.log(value);
     document.getElementById("a1").href = "robert://" + value;
-    document.getElementById("a2").href ="exp://172.20.10.4:19000/--/" + value;
+    document.getElementById("a2").href ="exp://192.168.154.186:19000/--/" + value;
     console.log(document.getElementById("a2").href);
 }
