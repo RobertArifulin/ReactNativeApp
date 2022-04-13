@@ -9,3 +9,7 @@ function main() {
     document.getElementById("a2").href ="exp://" + document.getElementById("t1").value + "/--/" + value;
     console.log(document.getElementById("a2").href);
 }
+function reload(){
+  document.getElementById("a1").href = "robert://" + value;
+  document.getElementById("a2").href ="exp://" + document.getElementById("t1").value + "/--/" + value;
+};
