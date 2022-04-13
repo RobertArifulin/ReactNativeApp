@@ -7,8 +7,6 @@ import {
 } from "react-native";
 import MainScreen from "./app/screens/MainScreen";
 
-const { Client } = require("@notionhq/client")
-
 // const notion = new Client({ auth: NOTION_KEY });
 
 export default function App() {

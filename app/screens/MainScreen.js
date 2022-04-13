@@ -6,9 +6,11 @@ import AnimTest from '../modules/AnimationTest';
 import Kard from '../modules/Kard';
 import {CLIENT_ID, CLIENT_SECRET} from "@env";
 
+// https://robertarifulin.github.io/ReactNativeApp/?code=140b65cd-4d71-4708-86af-2ec4ccd8cb43&state=
+
 const { Client } = require("@notionhq/client");
 
-let notion = new Client();
+let notion = '';
 
 const client_id = CLIENT_ID;
 const client_secret = CLIENT_SECRET;
@@ -48,34 +50,44 @@ function MainScreen(props) {
 
     const getToken = async () => {
         try {
-        if (!usedCode.includes(code)) {
-         const response = await fetch('https://api.notion.com/v1/oauth/token', {
-            method: 'POST',
-            headers: {
-              Authorization: authorization,
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                grant_type: "authorization_code",
-                code: code,
-                redirect_uri: redirect_uri
-            })
-          });
-         const json = await response.json();
-         if (!json.error) {
-            setData(json);
-            notion = new Client({
-                auth: data.access_token,
-              });
-            usedCode.push(code);
-            ;(async () => {
-                const listUsersResponse = await notion.users.list({})
-            })();
-            console.log(listUsersResponse);
-         }
-         console.log(json);
-        }
+            if (!usedCode.includes(code)) {
+                const response = await fetch('https://api.notion.com/v1/oauth/token', {
+                    method: 'POST',
+                    headers: {
+                        Authorization: authorization,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        grant_type: "authorization_code",
+                        code: code,
+                        redirect_uri: redirect_uri
+                    })
+                });
+                const json = await response.json();
+                console.log(123);
+                console.log(json.access_token);
+
+                if (json.access_token === undefined) {
+                    console.log("!UNDEFINED!");
+                } else {
+                    setData(json);
+                    console.log(2.1);
+                    console.log(data.access_token);
+                    notion = new Client({
+                        auth: data.access_token,
+                        });
+                    usedCode.push(code);
+                    ;(async () => {
+                        const listUsersResponse = await notion.users.list({});
+                        console.log(2);
+                        console.log(listUsersResponse);
+                    })();
+                    console.log(3);
+                    console.log(json);
+                }
+            }
         } catch (error) {
+            console.log(4);
             console.error(error);
         } finally {
             setLoading(false);
@@ -87,6 +99,7 @@ function MainScreen(props) {
         if ((url.url.match(new RegExp("/", "g")) || []).length > 2 || url.url[0] == 'r') {
             initialUrl = url.url;
             code = initialUrl.slice(initialUrl.lastIndexOf("/") + 1);
+            console.log(5);
             console.log(code);
             getToken();
         }
@@ -97,6 +110,7 @@ function MainScreen(props) {
         if ((url.match(new RegExp("/", "g")) || []).length > 2 || url[0] == 'r') {
             initialUrl = url;
             code = initialUrl.slice(initialUrl.lastIndexOf("/") + 1);
+            getToken();
         }
     } catch {
     } finally {
