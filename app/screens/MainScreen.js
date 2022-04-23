@@ -5,123 +5,36 @@ import base64 from 'react-native-base64';
 import AnimTest from '../modules/AnimationTest';
 import Kard from '../modules/Kard';
 import {CLIENT_ID, CLIENT_SECRET} from "@env";
+import {getToken, createClient} from "../modules/GetAccessToken"
 
-// https://robertarifulin.github.io/ReactNativeApp/?code=140b65cd-4d71-4708-86af-2ec4ccd8cb43&state=
+// https://robertarifulin.github.io/ReactNativeApp/?code=83cb2972-de5b-428b-bf60-96e452d7878a&state=
 
 const { Client } = require("@notionhq/client");
 
-let notion = '';
-
-const client_id = CLIENT_ID;
-const client_secret = CLIENT_SECRET;
-const redirect_uri = "https://robertarifulin.github.io/ReactNativeApp/";
-let initialUrl = "";
-let usedCode = [];
+let notion = null;
+const usedCode = [];
 let code = "";
-
-const authorization = "Basic " + base64.encode(client_id + ":" + client_secret) + "=";
+const redirect_uri = "https://robertarifulin.github.io/ReactNativeApp/";
+const URL = 'https://api.notion.com/v1/oauth/authorize?owner=user&client_id=728d9ca7-3680-4bfd-a63f-adacfa7ca050&redirect_uri=' + redirect_uri + '&response_type=code';
 
 const {screenWidth, screenHeight} = Dimensions.get("screen");
 
-const useMount = func => useEffect(() => func(), []);
-const useInitialURL = () => {
-    const [url, setUrl] = useState(null);
-    const [processing, setProcessing] = useState(true);
-
-    useMount(() => {
-    const getUrlAsync = async () => {
-        const initialUrl = await Linking.getInitialURL();
-        setTimeout(() => {
-        setUrl(initialUrl);
-        setProcessing(false);
-        }, 1000);
-    };
-
-    getUrlAsync();
-    });
-
-    return { url, processing };
-};
-
-
 function MainScreen(props) {
     const [isLoading, setLoading] = useState(true);
-    const [data, setData] = useState([]);
-
-    const getToken = async () => {
-        try {
-            if (!usedCode.includes(code)) {
-                const response = await fetch('https://api.notion.com/v1/oauth/token', {
-                    method: 'POST',
-                    headers: {
-                        Authorization: authorization,
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        grant_type: "authorization_code",
-                        code: code,
-                        redirect_uri: redirect_uri
-                    })
-                });
-                const json = await response.json();
-                console.log(123);
-                console.log(json.access_token);
-
-                if (json.access_token === undefined) {
-                    console.log("!UNDEFINED!");
-                } else {
-                    setData(json);
-                    console.log(2.1);
-                    console.log(data.access_token);
-                    notion = new Client({
-                        auth: data.access_token,
-                        });
-                    usedCode.push(code);
-                    ;(async () => {
-                        const listUsersResponse = await notion.users.list({});
-                        console.log(2);
-                        console.log(listUsersResponse);
-                    })();
-                    console.log(3);
-                    console.log(json);
-                }
-            }
-        } catch (error) {
-            console.log(4);
-            console.error(error);
-        } finally {
-            setLoading(false);
-        }
-     }
-
+    const [json, setJson] = useState(0);
      
-    Linking.addEventListener('url', function(url) {
-        if ((url.url.match(new RegExp("/", "g")) || []).length > 2 || url.url[0] == 'r') {
+    Linking.addEventListener('url', async function(url) {
+        if (((url.url.match(new RegExp("/", "g")) || []).length > 2 || url.url[0] == 'r')) {
             initialUrl = url.url;
             code = initialUrl.slice(initialUrl.lastIndexOf("/") + 1);
-            console.log(5);
-            console.log(code);
-            getToken();
+            if (!usedCode.includes(code)) {
+                usedCode.push(code);
+                setJson(await getToken(code));
+                notion = await createClient(json.access_token);
+            }
         }
     });
-
-    const { a: url, processing } = useInitialURL();
-    try {
-        if ((url.match(new RegExp("/", "g")) || []).length > 2 || url[0] == 'r') {
-            initialUrl = url;
-            code = initialUrl.slice(initialUrl.lastIndexOf("/") + 1);
-            getToken();
-        }
-    } catch {
-    } finally {
-    }
-    
-   
-    const URL = 'https://api.notion.com/v1/oauth/authorize?owner=user&client_id=728d9ca7-3680-4bfd-a63f-adacfa7ca050&redirect_uri=' + redirect_uri + '&response_type=code';
-    function hyperLink(){
-        Linking.openURL(URL);
-    }
-
+// https://robertarifulin.github.io/ReactNativeApp/?code=93239bb3-6a3b-4a84-a8a4-288e7d6846ac&state=
     return (
         <>
         <View style={{flex: 5}}>
@@ -132,8 +45,8 @@ function MainScreen(props) {
                 <Text style={styles.headingText}>Проект: Tinder для проектов{"\n"}</Text>
                 <Text style={styles.innerText}>Заказчик: Гусев Антон{"\n"}</Text>
                 <Text style={styles.innerText} >Исполнитель: Арифулин Роберт{"\n"}</Text>
-                <Text style={[styles.innerText, {color:"blue"}]} onPress={hyperLink}>Ссылка на авторизацию{"\n"}</Text>
-                <Text style={styles.innerText}>Токен: {data.access_token}</Text>
+                <Text style={[styles.innerText, {color:"blue"}]} onPress={() => {Linking.openURL(URL)}}>Ссылка на авторизацию{"\n"}</Text>
+                <Text style={styles.innerText}>Токен: {json.access_token}</Text>
             </Text>
         </View> 
         </>
