@@ -1,18 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import {View, StyleSheet, Platform, StatusBar, Text, Animation, Dimensions, Linking} from 'react-native';
+import React, { useState } from 'react';
+import {View, StyleSheet, StatusBar, Text, Dimensions, Linking} from 'react-native';
 import Swiper from '../modules/Swiper';
-import base64 from 'react-native-base64';
-import AnimTest from '../modules/AnimationTest';
-import Kard from '../modules/Kard';
-import {CLIENT_ID, CLIENT_SECRET} from "@env";
-import {getToken, createClient} from "../modules/GetAccessToken"
+import {getToken, clientResponse, getProjectsTable, usedCode} from "../modules/GetAccessToken"
 
 // https://robertarifulin.github.io/ReactNativeApp/?code=83cb2972-de5b-428b-bf60-96e452d7878a&state=
 
 const { Client } = require("@notionhq/client");
 
 let notion = null;
-const usedCode = [];
 let code = "";
 const redirect_uri = "https://robertarifulin.github.io/ReactNativeApp/";
 const URL = 'https://api.notion.com/v1/oauth/authorize?owner=user&client_id=728d9ca7-3680-4bfd-a63f-adacfa7ca050&redirect_uri=' + redirect_uri + '&response_type=code';
@@ -22,6 +17,7 @@ const {screenWidth, screenHeight} = Dimensions.get("screen");
 function MainScreen(props) {
     const [isLoading, setLoading] = useState(true);
     const [json, setJson] = useState(0);
+    const [projects, setProjects] = useState([]);
      
     Linking.addEventListener('url', async function(url) {
         if (((url.url.match(new RegExp("/", "g")) || []).length > 2 || url.url[0] == 'r')) {
@@ -29,8 +25,12 @@ function MainScreen(props) {
             code = initialUrl.slice(initialUrl.lastIndexOf("/") + 1);
             if (!usedCode.includes(code)) {
                 usedCode.push(code);
-                setJson(await getToken(code));
-                notion = await createClient(json.access_token);
+                let values = await getToken(code);
+                setJson(await values[0]);
+                notion = await values[1];
+                console.log("___________________Logged in Successfully___________________");
+                // clientResponse(notion);
+                setProjects(await getProjectsTable(notion))
             }
         }
     });
@@ -38,7 +38,7 @@ function MainScreen(props) {
     return (
         <>
         <View style={{flex: 5}}>
-            <Swiper/>
+            <Swiper projects={projects}/>
         </View>
         <View style={styles.lowerBar}>
             <Text style={styles.text}>

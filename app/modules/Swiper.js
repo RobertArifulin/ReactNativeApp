@@ -11,18 +11,19 @@ import {
     Dimensions,
     PanResponder,
 } from "react-native";
-import Kard from './Kard' 
+import Kard from './Kard';
 
 let widgetWidth = 0;
 let SCREEN_HEIGHT = Dimensions.get("window").height;
 let SCREEN_WIDTH = Dimensions.get("window").width;
+let text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum";
 
 const Items = [
-    {id : "1" , uri: <Kard name="Name One" customer="Winston Churchill"/>},
-    {id : "2" , uri: <Kard name="Name Two" customer="Winston Churchill"/>},
-    {id : "3" , uri: <Kard name="Name Three" customer="Winston Churchill"/>},
-    {id : "4" , uri: <Kard name="Name Four" customer="Winston Churchill"/>},
-    {id : "5" , uri: <Kard name="Name Five" customer="Winston Churchill"/>},
+    {id : "1" , uri: <Kard name="Name One" customer="Winston Churchill" description={text}/>},
+    {id : "2" , uri: <Kard name="Name Two" customer="Winston Churchill" description={text}/>},
+    {id : "3" , uri: <Kard name="Name Three" customer="Winston Churchill" description={text}/>},
+    {id : "4" , uri: <Kard name="Name Four" customer="Winston Churchill" description={text}/>},
+    {id : "5" , uri: <Kard name="Name Five" customer="Winston Churchill" description={text}/>},
 ];
 const Images = [
     { id: "1", uri: require("../assets/1.jpg") },
@@ -33,6 +34,12 @@ const Images = [
 ];
 
 function Swiper(props) {
+
+    // React.useEffect(() => {
+    //     setItems(props.projects);
+    //     Items = items;
+    // }, [props.projects])
+
     const defaultY = 0
     const position = new Animated.ValueXY({x : 0, y : defaultY});
     const [state, setState] = useState({ currentIndex: 0 });
@@ -109,7 +116,7 @@ function Swiper(props) {
                     duration: 300,
                     useNativeDriver: true,
                 }).start(() => {
-                    setState(state.currentIndex + 1 <= 4 ? {currentIndex: state.currentIndex + 1} : {currentIndex: 0});
+                    setState(state.currentIndex + 1 <= props.projects.length - 1 ? {currentIndex: state.currentIndex + 1} : {currentIndex: 0});
                     position.setValue({ x: 0, y: defaultY });
                 })
             } else if (getusreState.dx<-SCREEN_WIDTH / 3){
@@ -118,7 +125,7 @@ function Swiper(props) {
                     duration: 300,
                     useNativeDriver: true,
                 }).start(() => {
-                    setState(state.currentIndex + 1 <= 4 ? {currentIndex: state.currentIndex + 1} : {currentIndex: 0});
+                    setState(state.currentIndex + 1 <= props.projects.length - 1 ? {currentIndex: state.currentIndex + 1} : {currentIndex: 0});
                     position.setValue({ x: 0, y: defaultY });
                 })
             } else {
@@ -132,23 +139,28 @@ function Swiper(props) {
     });
 
     const renderImage = () => {
-        return Items.map((item, i) => {
+        return props.projects.map((item, i) => {
             if (i < state.currentIndex) {
                 return null;
             } else if (i == state.currentIndex) {
+                // console.log(item);
+                // console.log(i);
+                // console.log(state.currentIndex);
                 return (
                     <Animated.View
                         {...panResponder.panHandlers}
                         key={item.id}
                         style={[rotateAndTranslate, styles.topImageAnimation]}
                     >   
-                    <Animated.View style={[rotateAndTranslateLike, styles.likeAnimation, {opacity: likeOpacity}]}>
-                        <Text style={styles.likeText}>LIKE</Text>
-                    </Animated.View>
-                    <Animated.View style={[styles.dislikeAnimation, rotateAndTranslateDislike, {opacity: dislikeOpacity}]}>
-                        <Text style={styles.dislikeText}>NOPE</Text>
-                    </Animated.View>
-                        {item.uri}
+
+                        <Animated.View style={[rotateAndTranslateLike, styles.likeAnimation, {opacity: likeOpacity, alignSelf:'center'}]}>
+                            <Text style={styles.likeText}>LIKE</Text>
+                        </Animated.View>
+
+                        <Animated.View style={[styles.dislikeAnimation, rotateAndTranslateDislike, {opacity: dislikeOpacity, alignSelf:'center'}]}>
+                            <Text style={styles.dislikeText}>NOPE</Text>
+                        </Animated.View>
+                            {item.uri}
 
                     </Animated.View>
                 );
@@ -197,7 +209,7 @@ const styles = StyleSheet.create({
         height: SCREEN_HEIGHT / 6 * 5 - 40,
         width: SCREEN_WIDTH,
         padding: 10,
-        alignItems: 'center',
+        // alignItems: 'center',
         justifyContent: 'center'
         
     },

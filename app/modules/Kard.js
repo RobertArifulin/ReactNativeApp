@@ -19,7 +19,6 @@ const { Client } = require("@notionhq/client");
 
 let SCREEN_HEIGHT = Dimensions.get("window").height;
 let SCREEN_WIDTH = Dimensions.get("window").width;
-const text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum";
 
 function Kard(props) {
     const [modalVisible, setModalVisible] = useState(false);
@@ -35,7 +34,9 @@ function Kard(props) {
             >
                 <View style={styles.centeredView}>
                     <ScrollView contentContainerStyle={styles.popupScrollView}>
-                        <Text style={[styles.contentText, {paddingBottom: 20}]}>{text}</Text>
+                        <Text style={[styles.projectName, {paddingBottom: 20}]}>{props.name}</Text>
+                        <Text style={[styles.projectCustomer, {paddingBottom: 20}]}>{props.customer}</Text>
+                        <Text style={[styles.contentText, {paddingBottom: 20}]}>{props.description}</Text>
                         <Pressable
                             style={styles.button}
                             onPress={() => setModalVisible(!modalVisible)}
@@ -47,8 +48,8 @@ function Kard(props) {
                 </View>
             </Modal>
             <View style={styles.mainHeader}>
-                <Text style={styles.projectName}>{props.name}</Text>
-                <Text style={styles.projectCustomer}>{props.customer}</Text>
+                <Text style={styles.projectName} ellipsizeMode="tail" numberOfLines={1}>{props.name}</Text>
+                <Text style={styles.projectCustomer} ellipsizeMode="tail" numberOfLines={1}>{props.customer}</Text>
             </View>
             <View style={styles.mainContent}>
                 <View
@@ -64,7 +65,7 @@ function Kard(props) {
                             ellipsizeMode="tail"
                             numberOfLines={10}
                         >
-                            {text}
+                            {props.description}
                         </Text>
                     </View>
                     <View style={styles.innerFootter}>
@@ -140,6 +141,7 @@ const styles = StyleSheet.create({
         fontSize: 28,
     },
     contentText: {
+        width: null,
         fontFamily: "Roboto",
         textAlign: "center",
         color: "#000000",
