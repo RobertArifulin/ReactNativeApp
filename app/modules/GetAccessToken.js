@@ -44,7 +44,7 @@ export async function getProjectsTable(notion){
                 if (res[i]["properties"][key]["rich_text"].length) {
                     tmp["description"] = res[i]["properties"][key]["rich_text"][0]["plain_text"];
                 } else {
-                    tmp["description"] = "empty";
+                    tmp["description"] = "Описание отсутствует";
                 }
             }
         }

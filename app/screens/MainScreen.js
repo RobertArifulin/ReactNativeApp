@@ -1,11 +1,21 @@
 import React, { useState } from 'react';
-import {View, StyleSheet, StatusBar, Text, Dimensions, Linking} from 'react-native';
+import {View, StyleSheet, StatusBar, Text, Dimensions, Linking, Alert, Button} from 'react-native';
 import Swiper from '../modules/Swiper';
 import {getToken, clientResponse, getProjectsTable, usedCode} from "../modules/GetAccessToken"
-
+import Kard from "../modules/Kard";
 // https://robertarifulin.github.io/ReactNativeApp/?code=83cb2972-de5b-428b-bf60-96e452d7878a&state=
 
 const { Client } = require("@notionhq/client");
+
+let text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum";
+
+const Items = [
+    {id : "1" , uri: <Kard name="Name One" customer="Winston Churchill" description={text}/>},
+    {id : "2" , uri: <Kard name="Name Two" customer="Winston Churchill" description={text}/>},
+    {id : "3" , uri: <Kard name="Name Three" customer="Winston Churchill" description={text}/>},
+    {id : "4" , uri: <Kard name="Name Four" customer="Winston Churchill" description={text}/>},
+    {id : "5" , uri: <Kard name="Name Five" customer="Winston Churchill" description={text}/>},
+];
 
 let notion = null;
 let code = "";
@@ -30,7 +40,14 @@ function MainScreen(props) {
                 notion = await values[1];
                 console.log("___________________Logged in Successfully___________________");
                 // clientResponse(notion);
-                setProjects(await getProjectsTable(notion))
+                setProjects(await getProjectsTable(notion));
+                Alert.alert("Успех!", "Успешная авторизация",
+                [
+                    { text: "OK", onPress: () => console.log("OK Pressed") }
+                ]);
+                if (projects.length > 0) {
+                    Alert.alert("Успех!", "Успешная авторизация");
+                }
             }
         }
     });
@@ -38,15 +55,15 @@ function MainScreen(props) {
     return (
         <>
         <View style={{flex: 5}}>
-            <Swiper projects={projects}/>
+            <Swiper projects={projects.length > 0 ? projects : Items}/>
         </View>
         <View style={styles.lowerBar}>
             <Text style={styles.text}>
                 <Text style={styles.headingText}>Проект: Tinder для проектов{"\n"}</Text>
                 <Text style={styles.innerText}>Заказчик: Гусев Антон{"\n"}</Text>
                 <Text style={styles.innerText} >Исполнитель: Арифулин Роберт{"\n"}</Text>
-                <Text style={[styles.innerText, {color:"blue"}]} onPress={() => {Linking.openURL(URL)}}>Ссылка на авторизацию{"\n"}</Text>
-                <Text style={styles.innerText}>Токен: {json.access_token}</Text>
+                <Button style={[styles.innerText, {color:"blue", padding: 20}]} onPress={() => {Linking.openURL(URL)}} title="Авторизация"></Button>
+                {/* <Text style={styles.innerText}>Токен: {json.access_token}</Text> */}
             </Text>
         </View> 
         </>
@@ -72,6 +89,7 @@ const styles = StyleSheet.create({
     },
     innerText: {
         fontSize: 16,
+        marginHorizontal: 20,
     },
     lowerBar: {
         width: "100%",
